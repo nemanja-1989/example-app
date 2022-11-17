@@ -1,66 +1,66 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+## ENVIRONMENT:
+- sudo apt install mysql-server
+- sudo apt install apache2
+- sudo apt install php8.1
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## LOCAL, DEV, STG, PROD Commands:
+- composer install
+- touch .env, and paste .env.example content into .env file
+- php artisan key:generate
+- php artisan config:cache
+- php artisan optimize:clear
 
-## About Laravel
+## LOCAL TEST Commands:
+- php artisan schedule:run
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## PROD Commands without database (Jobs work synchronously): 
+- cd /
+- crontab -e
+- * * * * * cd /path-to-your-project && php artisan schedule:run >> /dev/null 2>&1
+- sudo systemctl start cron
+- sudo systemctl status cron
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## PROD Commands with database (Jobs work in queue database)
+- sudo apt update && sudo apt install supervisor
+- cd /etc/supervisor/conf.d/queue.conf
+    # Add this lines into this file, and setup your environment path--
+-   [program:laravel-worker]
+-   process_name=%(program_name)s_%(process_num)02d
+-   command=php /home/forge/app.com/artisan queue:work --default --sleep=3 --tries=3 --max-time=3600
+-   autostart=true
+-   autorestart=true
+-   stopasgroup=true
+-   killasgroup=true
+-   user=forge
+-   numprocs=8
+-   redirect_stderr=true
+-   stdout_logfile=/home/forge/app.com/worker.log
+-   stopwaitsecs=3600
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- supervisorctl reread
+- supervisorctl update
+- supervisorctl restart all
 
-## Learning Laravel
+- cd /
+- crontab -e
+- * * * * * cd /path-to-your-project && php artisan schedule:run >> /dev/null 2>&1
+- sudo systemctl start cron
+- sudo systemctl status cron
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- php artisan queue:table
+- php artisan migrate
+- php artisan optimize:clear
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## PROD Commands with Redis (db connection no) (Jobs work in queue redis)
+- Same environment like for database only one change in .env file
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- command=php /home/forge/app.com/artisan queue:work redis --sleep=3 --tries=3 --max-time=3600
 
-## Laravel Sponsors
+BROADCAST_DRIVER=log
+CACHE_DRIVER=redis
+FILESYSTEM_DISK=local
+QUEUE_CONNECTION=redis
+SESSION_DRIVER=file
+SESSION_LIFETIME=120
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
 
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
