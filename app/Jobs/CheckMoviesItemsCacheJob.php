@@ -24,8 +24,12 @@ class CheckMoviesItemsCacheJob implements ShouldQueue
     public function handle()
     {
         if(!Cache::has('/v1/items')) {
-            $moviesItems = $this->getData(new \App\Services\HttpService(env('MOVIE_URI') . 'items', 0, MovieCredentials::movieCredentialsHeader()));
-            cache(['/v1/items' => $moviesItems], now()->addMinutes(5));
+            Cache::put('/v1/items', $this->getData(new \App\Services\HttpService(env('MOVIE_URI') . 'items', 0, MovieCredentials::movieCredentialsHeader())), now()->addSeconds(30));
+            foreach(Cache::get('/v1/items') as $item) {
+                if(!Cache::has('/v1/items/' . $item->id)) {
+                    Cache::put('/v1/items/' . $item->id, $item, now()->addSeconds(30));
+                }
+            }
         }
     }
 }

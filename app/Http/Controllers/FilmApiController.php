@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Traits\Services\GetHttpService;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
-use App\Helpers\MovieCredentials;
 
 class FilmApiController extends Controller
 {
