@@ -20,10 +20,10 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
         $schedule->call(function () {
             CheckMoviesItemsCacheJob::dispatch();
-        })->everyMinute();
+        })->everyThreeMinutes();
         $schedule->call(function () {
             CheckMoviesItemsTitleIdCacheJob::dispatch();
-        })->everyMinute();
+        })->everyThreeMinutes();
     }
 
     /**

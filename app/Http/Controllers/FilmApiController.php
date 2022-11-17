@@ -14,8 +14,7 @@ class FilmApiController extends Controller
 
     public function getItems() {
         try {
-              $moviesItems = cache('/v1/items');
-            return view('Movies.items', ['movies' => $moviesItems]);
+            return view('Movies.items', ['movies' => cache('/v1/items')]);
         } catch (\Exception $e) {
             Log::info($e->getMessage());
             exit();
@@ -24,8 +23,7 @@ class FilmApiController extends Controller
 
     public function getItem(int $titleId) {
         try {
-            $movieItem = cache('/v1/items/' . $titleId);
-            return view('Movies.item', ['item' => $movieItem]);
+            return view('Movies.item', ['item' => cache('/v1/items/' . $titleId)]);
         } catch (\Exception $e) {
             Log::info($e->getMessage());
             exit();
