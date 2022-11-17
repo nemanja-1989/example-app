@@ -6,6 +6,7 @@
                 <p>Id: {{$movie->id}}</p>
                 <p>Title: {{$movie->title}}</p>
                 <p>Synopsis: {{$movie->synopsis}}</p>
+                <a href="{{route('item', $movie->id)}}">Details</a>
             @endforeach
         @else
         <p>Movies doesnt exits yet!</p>

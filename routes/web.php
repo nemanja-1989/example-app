@@ -18,4 +18,4 @@ Route::get('/', function () {
 });
 
 Route::get('/v1/items', [\App\Http\Controllers\FilmApiController::class, 'getItems']);
-Route::get('/v1/items/{titleId}', [\App\Http\Controllers\FilmApiController::class, 'getItem']);
+Route::get('/v1/items/{titleId}', [\App\Http\Controllers\FilmApiController::class, 'getItem'])->name('item');
