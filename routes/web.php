@@ -17,4 +17,5 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/film-api', [\App\Http\Controllers\FilmApiController::class, 'getMovies']);
+Route::get('/v1/items', [\App\Http\Controllers\FilmApiController::class, 'getItems']);
+Route::get('/v1/items/{titleId}', [\App\Http\Controllers\FilmApiController::class, 'getItem']);

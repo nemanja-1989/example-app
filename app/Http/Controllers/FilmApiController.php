@@ -11,10 +11,20 @@ class FilmApiController extends Controller
 {
     use GetHttpService;
 
-    public function getMovies() {
+    public function getItems() {
         try {
-            $movies = $this->getData(new \App\Services\HttpService(env('MOVIE_ITEMS'), 0, MovieCredentials::movieCredentialsHeader()));
-            return view('Movies.movies', ['movies' => $movies]);
+            $moviesItems = $this->getData(new \App\Services\HttpService(env('MOVIE_URI') . 'items', 0, MovieCredentials::movieCredentialsHeader()));
+            return view('Movies.items', ['movies' => $moviesItems]);
+        } catch (\Exception $e) {
+            Log::info($e->getMessage());
+            exit();
+        }
+    }
+
+    public function getItem(int $titleId) {
+        try {
+            $movieItem = $this->getData(new \App\Services\HttpService(env('MOVIE_URI') . 'items/' . $titleId, 0, MovieCredentials::movieCredentialsHeader()));
+            return view('Movies.item', ['item' => $movieItem]);
         } catch (\Exception $e) {
             Log::info($e->getMessage());
             exit();
